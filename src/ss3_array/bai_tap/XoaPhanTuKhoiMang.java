@@ -31,14 +31,18 @@ public class XoaPhanTuKhoiMang {
         if (index_del == -1) {
             System.out.println("Phần tử " + X + " không tồn tại trong mảng.");
         } else {
+            int[] newArr = new int[N - 1];
             // Bước 4: Thực hiện xoá phần tử X khỏi mảng
-            for (int i = index_del; i < N - 1; i++) {
-                arr[i] = arr[i + 1];
+            for (int i = 0; i < index_del; i++) {
+                newArr[i] = arr[i];
+            }
+            for (int i = index_del + 1; i < N; i++) {
+                newArr[i - 1] = arr[i];
             }
             // Bước 5:  Kết thúc duyệt mảng. In ra mảng.
             System.out.print("Mảng sau khi xóa phần tử: ");
-            for (int i = 0; i < N - 1; i++) {
-                System.out.print(arr[i] + " ");
+            for (int num : newArr) {
+                System.out.print(num + " ");
             }
         }
     }
