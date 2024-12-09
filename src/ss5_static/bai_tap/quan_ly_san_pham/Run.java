@@ -37,7 +37,7 @@ public class Run {
                 case 3:
                     System.out.print("Nhập ID sản phẩm cần cập nhật: ");
                     int updateId = scanner.nextInt();
-                    scanner.nextLine(); // Xử lý ký tự xuống dòng
+                    scanner.nextLine();
                     System.out.print("Nhập tên mới: ");
                     String newName = scanner.nextLine();
                     System.out.print("Nhập giá mới: ");
