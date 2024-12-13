@@ -1,8 +1,8 @@
 package ss7_interface_abstract_class.bai_tap.code_gym;
 
-import ss7_interface_abstract_class.bai_tap.resizeable.Resizeable;
+import ss7_interface_abstract_class.bai_tap.resizeable.IResizeable;
 
-public class Rectangle extends Shape implements Resizeable {
+public class Rectangle extends Shape implements IResizeable {
     private double width = 1.0;
     private double length = 1.0;
 

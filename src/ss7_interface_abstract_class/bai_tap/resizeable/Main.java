@@ -23,8 +23,8 @@ public class Main {
             double percent = 1 + random.nextInt(100);
             System.out.println("Resizing by " + percent + "%");
 
-            if (shape instanceof Resizeable) {
-                ((Resizeable) shape).resize(percent);
+            if (shape instanceof IResizeable) {
+                ((IResizeable) shape).resize(percent);
             }
 
             System.out.println("After resizing:");

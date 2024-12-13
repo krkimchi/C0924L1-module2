@@ -1,9 +1,9 @@
 package ss7_interface_abstract_class.bai_tap.code_gym;
 
-import ss7_interface_abstract_class.bai_tap.colorable.Colorable;
-import ss7_interface_abstract_class.bai_tap.resizeable.Resizeable;
+import ss7_interface_abstract_class.bai_tap.colorable.IColorable;
+import ss7_interface_abstract_class.bai_tap.resizeable.IResizeable;
 
-public class Square extends Shape implements Resizeable, Colorable {
+public class Square extends Shape implements IResizeable, IColorable {
     private double side;
 
     public Square() {

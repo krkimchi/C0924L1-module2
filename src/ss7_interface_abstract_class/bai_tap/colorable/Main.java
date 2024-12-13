@@ -24,8 +24,8 @@ public class Main {
                 System.out.println("Area: " + ((Square) shape).getArea());
             }
 
-            if (shape instanceof Colorable) {
-                ((Colorable) shape).howToColor();
+            if (shape instanceof IColorable) {
+                ((IColorable) shape).howToColor();
             }
             System.out.println();
         }
