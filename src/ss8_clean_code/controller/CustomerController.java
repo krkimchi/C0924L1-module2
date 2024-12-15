@@ -31,7 +31,7 @@ public class CustomerController {
                     addCustomer();
                     break;
                 case 2:
-                    showCustomers();
+                    displayCustomer();
                     break;
                 case 3:
                     updateCustomer();
@@ -65,7 +65,7 @@ public class CustomerController {
         System.out.println("Khách hàng đã được thêm.");
     }
 
-    private void showCustomers() {
+    private void displayCustomer() {
         customerService.displayCustomers();
     }
 
