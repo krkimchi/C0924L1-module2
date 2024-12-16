@@ -33,7 +33,7 @@ public class Square extends Shape implements IResizeable, IColorable {
 
     @Override
     public void resize(double percent) {
-        this.side += this.side * percent / 100;
+        this.side *= (1 + percent / 100);
     }
 
     @Override
