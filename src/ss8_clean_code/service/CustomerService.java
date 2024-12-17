@@ -2,9 +2,10 @@ package ss8_clean_code.service;
 
 import ss8_clean_code.model.Customer;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerService implements ICustomerService {
-    private ArrayList<Customer> customerList;
+    private List<Customer> customerList;
 
     public CustomerService() {
         customerList = new ArrayList<>();
@@ -20,14 +21,12 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public void displayCustomers() {
-        for (Customer customer : customerList) {
-            System.out.println(customer);
-        }
+    public List<Customer> getAllCustomers() {
+        return customerList;
     }
 
     @Override
-    public boolean deleteCustomer(int id) {
+    public boolean deleteCustomerByID(int id) {
         for (int i = 0; i < customerList.size(); i++) {
             if (customerList.get(i).getId() == id) {
                 System.out.println("Xóa khách hàng thành công: " + customerList.get(i));
@@ -52,5 +51,15 @@ public class CustomerService implements ICustomerService {
         }
         System.out.println("Không tìm thấy khách hàng với ID: " + customer.getId());
         return false;
+    }
+
+    @Override
+    public Customer getCustomerByID(int id) {
+        for (Customer customer : customerList) {
+            if (customer.getId() == id) {
+                return customer;
+            }
+        }
+        return null;
     }
 }
