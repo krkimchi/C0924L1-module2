@@ -10,8 +10,8 @@ public class VehicleService implements IVehicleService {
 
     public VehicleService() {
         vehicles.add(new Car("30A-12345", "Toyota", 2020, "Nguyễn Văn A", 5, "Sedan"));
-        vehicles.add(new Truck("29B-54321", "Hino", 2018, "Trần Thị B", 3.5));
-        vehicles.add(new Motorbike("59C1-67890", "Yamaha", 2021, "Lê Văn C", 150));
+        vehicles.add(new Truck("31B-56789", "Hino", 2018, "Trần Thị B", 3.5));
+        vehicles.add(new Motorbike("32C-67890", "Yamaha", 2021, "Lê Văn C", 150));
     }
 
     @Override
