@@ -9,20 +9,22 @@ public class SortString {
         String str = scanner.nextLine();
 
         String result = "";
+        String tempResult = "";
 
         for (int i = 0; i < str.length(); i++) {
             char currentChar = str.charAt(i);
 
-            boolean found = false;
-            for (int j = 0; j < result.length(); j++) {
-                if (result.charAt(j) == currentChar) {
-                    found = true;
-                    break;
+            if (tempResult.isEmpty() || currentChar > tempResult.charAt(tempResult.length() - 1)) {
+                tempResult += currentChar;
+            } else {
+                if (tempResult.length() > result.length()) {
+                    result = tempResult;
                 }
+                tempResult = "" + currentChar;
             }
-            if (!found && (result.isEmpty() || currentChar > result.charAt(result.length() - 1))) {
-                result += currentChar;
-            }
+        }
+        if (tempResult.length() > result.length()) {
+            result = tempResult;
         }
 
         System.out.println("Chuỗi tăng dần lớn nhất là: " + result);
