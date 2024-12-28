@@ -9,8 +9,8 @@ public class Main {
         int num = 30;
         String result = converter.decimalToBinary(num);
 
-        System.out.print("Decimal: " + num);
-        System.out.print("\nBinary: " + result);
+        System.out.print("Số thập phân: " + num);
+        System.out.print("\nSố nhị phân: " + result);
 
     }
 }

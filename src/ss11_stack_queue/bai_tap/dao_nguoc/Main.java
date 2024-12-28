@@ -18,8 +18,8 @@ public class Main {
         }
 
         String input = "Hello World";
-        System.out.println("\n\nOriginal String: " + input);
+        System.out.println("\n\nChuỗi trước khi đảo ngược: " + input);
         String reversedString = reverseUtil.reverseString(input);
-        System.out.println("Reversed String: " + reversedString);
+        System.out.println("Chuỗi sau khi đảo ngược: " + reversedString);
     }
 }
