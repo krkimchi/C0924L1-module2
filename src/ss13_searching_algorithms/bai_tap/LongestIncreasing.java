@@ -1,4 +1,4 @@
-package ss13_thuat_toan.bai_tap;
+package ss13_searching_algorithms.bai_tap;
 
 import java.util.Scanner;
 
