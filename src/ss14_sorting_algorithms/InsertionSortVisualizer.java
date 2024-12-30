@@ -23,8 +23,8 @@ public class InsertionSortVisualizer {
             arr[j + 1] = key;
             System.out.println("Bước " + i + ": " + Arrays.toString(arr));
             if (step > 0) {
-                System.out.println("Số đã dịch chuyển: " + movement);
-                System.out.println("Dịch chuyển tổng cộng: " + step + " lần");
+                System.out.println("  Số đã dịch chuyển: " + movement);
+                System.out.println("  Dịch chuyển tổng cộng: " + step + " lần");
             } else {
                 System.out.println("Không có số nào dịch chuyển.");
             }
