@@ -13,10 +13,11 @@ public class InsertionSort {
     public static void insertionSort(int[] list) {
         for (int i = 1; i < list.length; i++) {
             int key = list[i];
-            int j;
+            int j = i - 1;
 
-            for (j = i - 1; j >= 0 && key < list[j]; j--) {
+            while (j >= 0 && list[j] > key) {
                 list[j + 1] = list[j];
+                j--;
             }
             list[j + 1] = key;
         }
