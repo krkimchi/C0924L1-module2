@@ -1,4 +1,4 @@
-package ss14_sorting_algorithms;
+package ss14_sorting_algorithms.bai_tap;
 
 import java.util.Arrays;
 
