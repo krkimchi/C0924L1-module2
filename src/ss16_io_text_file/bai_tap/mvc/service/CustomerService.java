@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService implements ICustomerService {
-    private final String FILE_PATH = "data/customers.csv";
+    private final String FILE_PATH = "src/ss16_io_text_file/bai_tap/mvc/data/customers.csv";
 
     @Override
     public void addCustomer(Customer customer) {
