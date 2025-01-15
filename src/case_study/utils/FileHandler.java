@@ -28,4 +28,15 @@ public class FileHandler {
             System.out.println("Lỗi khi ghi vào file: " + e.getMessage());
         }
     }
+
+    public static void overwriteFile(String fileName, List<String> data) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(DATA_PATH + fileName))) {
+            for (String line : data) {
+                bw.write(line);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Lỗi khi ghi đè vào file: " + e.getMessage());
+        }
+    }
 }
