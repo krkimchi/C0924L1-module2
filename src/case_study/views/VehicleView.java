@@ -14,17 +14,18 @@ public class VehicleView {
         System.out.print("Chọn chức năng: ");
     }
 
-    public int getChoice() {
+    public int getChoice(int min, int max) {
         while (true) {
             String input = scanner.nextLine();
-            if (input.isEmpty()) {
-                System.out.print("Vui lòng nhập một số hợp lệ: ");
-            } else {
-                try {
-                    return Integer.parseInt(input);
-                } catch (NumberFormatException e) {
-                    System.out.print("Lựa chọn không hợp lệ. Vui lòng nhập số: ");
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice < min || choice > max) {
+                    System.out.print("Lựa chọn không hợp lệ. Vui lòng nhập từ " + min + " đến " + max + ": ");
+                } else {
+                    return choice;
                 }
+            } catch (NumberFormatException e) {
+                System.out.print("Lựa chọn không hợp lệ. Vui lòng nhập số: ");
             }
         }
     }

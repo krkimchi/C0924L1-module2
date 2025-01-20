@@ -1,18 +1,19 @@
 package case_study.controllers;
 
 import case_study.models.*;
+import case_study.services.VehicleService;
 import case_study.utils.FileHandler;
 import case_study.views.VehicleView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class VehicleController {
-    private final List<Vehicle> vehicleList = new ArrayList<>();
     private final VehicleView view;
+    private final VehicleService vehicleService;
 
-    public VehicleController(VehicleView view) {
+    public VehicleController(VehicleView view, VehicleService vehicleService) {
         this.view = view;
+        this.vehicleService = vehicleService;
     }
 
     public void start() {
@@ -21,7 +22,7 @@ public class VehicleController {
         while (running) {
             view.showMenu();
             try {
-                int choice = view.getChoice();
+                int choice = view.getChoice(1, 4);
 
                 switch (choice) {
                     case 1:
@@ -41,10 +42,8 @@ public class VehicleController {
                         view.printMessage("Lựa chọn không hợp lệ. Vui lòng thử lại!");
                         break;
                 }
-            } catch (NumberFormatException e) {
-                view.printMessage("Lỗi: Vui lòng nhập một số hợp lệ!");
             } catch (Exception e) {
-                view.printMessage("Đã xảy ra lỗi: " + e.getMessage());
+                view.printMessage("Lỗi: " + e.getMessage());
             }
         }
     }
@@ -56,64 +55,73 @@ public class VehicleController {
 
         try {
             int choice = Integer.parseInt(view.getInput("Chọn loại phương tiện: "));
-
             String licensePlate = view.getInput("Nhập biển kiểm soát: ");
-            if (isDuplicate(licensePlate)) {
-                view.printMessage("Phương tiện với biển kiểm soát này đã tồn tại!");
-                return;
-            }
 
             List<String> manufacturers = FileHandler.readFile("manufacturer.csv");
+
             if (manufacturers.isEmpty()) {
-                view.printMessage("Danh sách hãng sản xuất trống!");
+                view.printMessage("Không có hãng sản xuất nào trong danh sách!");
                 return;
             }
 
             view.printMessage("Danh sách hãng sản xuất:");
             for (int i = 0; i < manufacturers.size(); i++) {
-                view.printMessage((i + 1) + ". " + manufacturers.get(i));
+                String[] parts = manufacturers.get(i).split(",");
+                if (parts.length > 1) {
+                    view.printMessage((i + 1) + ". " + manufacturers.get(i));
+                }
             }
 
-            int manufacturerChoice = Integer.parseInt(view.getInput("Chọn hãng sản xuất"));
-            if (manufacturerChoice < 1 || manufacturerChoice > manufacturers.size()) {
-                view.printMessage("Lựa chọn không hợp lệ!");
-                return;
+            int manufacturerChoice = -1;
+            while (true) {
+                try {
+                    manufacturerChoice = Integer.parseInt(view.getInput("Chọn hãng sản xuất: "));
+                    if (manufacturerChoice >= 1 && manufacturerChoice <= manufacturers.size()) {
+                        break;
+                    } else {
+                        view.printMessage("Lựa chọn không hợp lệ!");
+                    }
+                } catch (NumberFormatException e) {
+                    view.printMessage("Lỗi: Vui lòng nhập số hợp lệ!");
+                }
             }
-            String manufacturer = manufacturers.get(manufacturerChoice - 1).split(",")[1];
 
+            String manufacturer = "";
+
+            String manufacturerLine = manufacturers.get(manufacturerChoice - 1);
+            String[] manufacturerData = manufacturerLine.split(",");
+
+            if (manufacturerData.length > 1) {
+                manufacturer = manufacturerData[1];
+            } else {
+                manufacturer = "Không xác định";
+            }
 
             int productionYear = Integer.parseInt(view.getInput("Nhập năm sản xuất: "));
-            if (productionYear < 1900 || productionYear > 2025) {
-                view.printMessage("Năm sản xuất không hợp lệ!");
-                return;
-            }
             String owner = view.getInput("Nhập chủ sở hữu: ");
 
             Vehicle vehicle;
+            String fileName;
 
-            switch (choice) {
-                case 1:
-                    double payload = Double.parseDouble(view.getInput("Nhập trọng tải: "));
-                    vehicle = new Truck(licensePlate, manufacturer, productionYear, owner, payload);
-                    FileHandler.writeFile("trucks.csv", vehicle.toString());
-                    break;
-                case 2:
-                    String carType = view.getInput("Nhập kiểu xe: ");
-                    int seats = Integer.parseInt(view.getInput("Nhập số chỗ ngồi: "));
-                    vehicle = new Car(licensePlate, manufacturer, productionYear, owner, carType, seats);
-                    FileHandler.writeFile("cars.csv", vehicle.toString());
-                    break;
-                case 3:
-                    int engineCapacity = Integer.parseInt(view.getInput("Nhập công suất: "));
-                    vehicle = new Motorcycle(licensePlate, manufacturer, productionYear, owner, engineCapacity);
-                    FileHandler.writeFile("motorcycles.csv", vehicle.toString());
-                    break;
-                default:
-                    view.printMessage("Lựa chọn không hợp lệ!");
-                    return;
+            if (choice == 1) {
+                double payload = Double.parseDouble(view.getInput("Nhập trọng tải: "));
+                vehicle = new Truck(licensePlate, manufacturer, productionYear, owner, payload);
+                fileName = "trucks.csv";
+            } else if (choice == 2) {
+                String carType = view.getInput("Nhập kiểu xe: ");
+                int seats = Integer.parseInt(view.getInput("Nhập số chỗ ngồi: "));
+                vehicle = new Car(licensePlate, manufacturer, productionYear, owner, carType, seats);
+                fileName = "cars.csv";
+            } else if (choice == 3) {
+                int engineCapacity = Integer.parseInt(view.getInput("Nhập công suất: "));
+                vehicle = new Motorcycle(licensePlate, manufacturer, productionYear, owner, engineCapacity);
+                fileName = "motorcycles.csv";
+            } else {
+                view.printMessage("Lựa chọn không hợp lệ!");
+                return;
             }
 
-            vehicleList.add(vehicle);
+            vehicleService.addVehicle(vehicle, fileName);
             view.printMessage("Thêm mới phương tiện thành công!");
 
         } catch (NumberFormatException e) {
@@ -130,44 +138,8 @@ public class VehicleController {
 
         try {
             int choice = Integer.parseInt(view.getInput("Chọn loại phương tiện: "));
-
-            List<String> data;
-            switch (choice) {
-                case 1:
-                    data = FileHandler.readFile("trucks.csv");
-                    break;
-                case 2:
-                    data = FileHandler.readFile("cars.csv");
-                    break;
-                case 3:
-                    data = FileHandler.readFile("motorcycles.csv");
-                    break;
-                default:
-                    view.printMessage("Lựa chọn không hợp lệ!");
-                    return;
-            }
-
-            if (data.isEmpty()) {
-                view.printMessage("Không có phương tiện nào trong danh sách.");
-            } else {
-                data.forEach(view::printMessage);
-            }
-        } catch (NumberFormatException e) {
-            view.printMessage("Lỗi: Vui lòng nhập đúng định dạng số!");
-        } catch (Exception e) {
-            view.printMessage("Đã xảy ra lỗi khi hiển thị phương tiện: " + e.getMessage());
-        }
-    }
-
-    private void deleteVehicle() {
-        try {
-            view.printMessage("1. Xóa xe tải");
-            view.printMessage("2. Xóa ôtô");
-            view.printMessage("3. Xóa xe máy");
-
-            int choice = Integer.parseInt(view.getInput("Chọn loại phương tiện cần xóa (1/2/3): "));
-
             String fileName;
+
             switch (choice) {
                 case 1:
                     fileName = "trucks.csv";
@@ -183,32 +155,52 @@ public class VehicleController {
                     return;
             }
 
-            String regex = "^[0-9]{2}[A-Z]-[0-9]{3}\\.[0-9]{2}$";
-            String licensePlate = view.getInput("Nhập biển kiểm soát phương tiện cần xóa: ");
+            List<String> vehicles = vehicleService.getAllVehicles(fileName);
 
-            if (!licensePlate.matches(regex)) {
-                view.printMessage("Lỗi: Biển kiểm soát không đúng định dạng! Ví dụ hợp lệ: 43A-123.45");
+            if (vehicles.isEmpty()) {
+                view.printMessage("Không có phương tiện nào trong danh sách.");
+            } else {
+                vehicles.forEach(view::printMessage);
+            }
+
+        } catch (NumberFormatException e) {
+            view.printMessage("Lỗi: Vui lòng nhập đúng định dạng số!");
+        } catch (Exception e) {
+            view.printMessage("Đã xảy ra lỗi khi hiển thị phương tiện: " + e.getMessage());
+        }
+    }
+
+    private void deleteVehicle() {
+        view.printMessage("1. Xóa xe tải");
+        view.printMessage("2. Xóa ôtô");
+        view.printMessage("3. Xóa xe máy");
+
+        try {
+            int choice = view.getChoice(1, 3);
+            String fileName;
+
+            if (choice == 1) {
+                fileName = "trucks.csv";
+            } else if (choice == 2) {
+                fileName = "cars.csv";
+            } else if (choice == 3) {
+                fileName = "motorcycles.csv";
+            } else {
+                view.printMessage("Lựa chọn không hợp lệ!");
                 return;
             }
 
-            List<String> vehicles = FileHandler.readFile(fileName);
-            boolean found = false;
+            String licensePlate = view.getInput("Nhập biển kiểm soát phương tiện cần xóa: ");
+            String confirmation = view.getInput("Bạn có chắc chắn muốn xóa phương tiện này? (yes/no): ");
 
-            for (String line : vehicles) {
-                if (line.startsWith(licensePlate)) {
-                    String confirmation = view.getInput("Bạn có chắc chắn muốn xóa phương tiện này? (Yes/No): ");
-                    if (confirmation.equalsIgnoreCase("Yes")) {
-                        vehicles.remove(line);
-                        FileHandler.overwriteFile(fileName, vehicles);
-                        view.printMessage("Đã xóa thành công phương tiện!");
-                    } else {
-                        view.printMessage("Hủy xóa phương tiện.");
-                    }
-                    found = true;
-                    break;
-                }
+            if (!confirmation.equalsIgnoreCase("yes")) {
+                view.printMessage("Hủy thao tác xóa.");
+                return;
             }
-            if (!found) {
+
+            if (vehicleService.deleteVehicle(licensePlate, fileName)) {
+                view.printMessage("Đã xóa thành công phương tiện!");
+            } else {
                 view.printMessage("Không tìm thấy phương tiện với biển kiểm soát: " + licensePlate);
             }
 
@@ -217,14 +209,5 @@ public class VehicleController {
         } catch (Exception e) {
             view.printMessage("Đã xảy ra lỗi khi xóa phương tiện: " + e.getMessage());
         }
-    }
-
-    private boolean isDuplicate(String licensePlate) {
-        for (Vehicle vehicle : vehicleList) {
-            if (vehicle.getLicensePlate().equals(licensePlate)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

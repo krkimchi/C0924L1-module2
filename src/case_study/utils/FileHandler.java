@@ -9,16 +9,32 @@ public class FileHandler {
 
     public static List<String> readFile(String fileName) {
         List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(DATA_PATH + fileName))) {
+        File file = new File(DATA_PATH + fileName);
+
+        if (!file.exists()) {
+            return lines;
+        }
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
             String line;
             while ((line = br.readLine()) != null) {
                 lines.add(line);
             }
         } catch (IOException e) {
             System.out.println("Lỗi khi đọc file: " + e.getMessage());
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    System.out.println("Lỗi khi đóng BufferedReader: " + e.getMessage());
+                }
+            }
         }
         return lines;
     }
+
 
     public static void writeFile(String fileName, String data) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(DATA_PATH + fileName, true))) {
